@@ -15,7 +15,8 @@ class MenuView(View):
                      'Get diagnostic test': 'diagnostic'}
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template, {'services': self.menu_services})
+        return render(request, self.template,
+                      {'services': self.menu_services, })
 
 
 class TicketView(View):
@@ -46,3 +47,12 @@ class TicketView(View):
         self.line_of_cars[service] += 1
         ticket_numer = sum(self.line_of_cars.values())
         return render(request, self.template, {'number': ticket_numer, 'time': waiting_time})
+
+
+class ProcessingView(View):
+    template = 'menu_operator.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template, {'oil_queue': TicketView.line_of_cars['change_oil'],
+                                               'tires_queue': TicketView.line_of_cars['inflate_tires'],
+                                               'diagnostic_queue': TicketView.line_of_cars['diagnostic']})
